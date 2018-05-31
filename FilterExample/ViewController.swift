@@ -72,13 +72,13 @@ class ViewController: UIViewController {
 		scrollview.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
 	}
 	
-//	func applyMask(_ maskRect: CGRect) {
-//		let maskLayer = CAShapeLayer()
-//		let path = CGMutablePath()
-//		path.addRect(maskRect)
-//		maskLayer.path = path
-//		filteredImageView.layer.mask = maskLayer
-//	}
+	func applyMask(_ maskRect: CGRect) {
+		let maskLayer = CAShapeLayer()
+		let path = CGMutablePath()
+		path.addRect(maskRect)
+		maskLayer.path = path
+		filteredImageView.layer.mask = maskLayer
+	}
 	
 } // end of class
 
