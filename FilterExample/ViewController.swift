@@ -42,13 +42,12 @@ class ViewController: UIViewController {
 	
 	lazy var scrollview: UIScrollView = {
 		let scrollview = UIScrollView()
-		scrollview.delegate = self
-		scrollview.contentSize = CGSize(width: self.view.bounds.width, height: self.view.bounds.height)
 		scrollview.isPagingEnabled = true
+		scrollview.backgroundColor = UIColor.clear
 		scrollview.showsHorizontalScrollIndicator = false
 		scrollview.showsVerticalScrollIndicator = false
 		scrollview.contentMode = .scaleAspectFill
-		applyMask(CGRect(x: self.view.bounds.width - scrollview.contentOffset.x, y: scrollview.contentOffset.y, width: scrollview.contentSize.width, height: scrollview.contentSize.height))
+		scrollview.frame = view.frame
 		return scrollview
 	}()
 	
@@ -56,7 +55,6 @@ class ViewController: UIViewController {
 		super.viewDidLoad()
 		
 		setupUI()
-		createFilters()
 	}
 	
 	fileprivate func setupUI() {
@@ -74,45 +72,16 @@ class ViewController: UIViewController {
 		scrollview.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
 	}
 	
+//	func applyMask(_ maskRect: CGRect) {
+//		let maskLayer = CAShapeLayer()
+//		let path = CGMutablePath()
+//		path.addRect(maskRect)
+//		maskLayer.path = path
+//		filteredImageView.layer.mask = maskLayer
+//	}
 	
-	fileprivate func createFilters() {
-		var itemCount = 0
-		
-		for i in 0..<filterNames.count {
-			itemCount = i
-			
-			filteredImageView.frame = CGRect(x: 0, y: 0, width: currentImageView.frame.size.width, height: currentImageView.frame.size.height)
-			filteredImageView.tag = itemCount
-			
-			let context = CIContext(options: nil)
-			let originalImage = CIImage(image: filteredImageView.image!)
-			guard let filter = CIFilter(name: "\(filterNames[i])") else { return print("No filter can be found")}
-			
-			filter.setValue(originalImage, forKey: kCIInputImageKey)
-			let filteredImageData = filter.value(forKey: kCIInputImageKey) as! CIImage
-			let filteredImageRef = context.createCGImage(filteredImageData, from: filteredImageData.extent)
-			filteredImageView.image = UIImage(cgImage: filteredImageRef!)
-			scrollview.add(filteredImageView)
-	  }
-		
-		scrollview.contentSize = CGSize(width: (filteredImageView.image?.size.width)! * CGFloat(itemCount), height: (filteredImageView.image?.size.height)!)
-	}
-		
-	func applyMask(_ maskRect: CGRect) {
-		let maskLayer = CAShapeLayer()
-		let path = CGMutablePath()
-		path.addRect(maskRect)
-		maskLayer.path = path
-		filteredImageView.layer.mask = maskLayer
-	}
 } // end of class
 
-extension ViewController: UIScrollViewDelegate {
-	
-	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		applyMask(CGRect(x: self.view.bounds.width - scrollview.contentOffset.x, y: scrollview.contentOffset.y, width: scrollView.contentSize.width, height: scrollView.contentSize.height))
-	}
-}
 
 
 
