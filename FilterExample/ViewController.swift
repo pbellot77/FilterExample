@@ -34,9 +34,7 @@ class ViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
 		currentImage = currentImageView.image
-		
 		setupUI()
 	}
 	
@@ -80,20 +78,15 @@ class ViewController: UIViewController {
 	
 	func setFilter(action: UIAlertAction) {
 		guard currentImage != nil else { return }
-		
 		currentFilter = CIFilter(name: action.title!)
-		
 		let beginImage = CIImage(image: currentImage)
 		currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
-		
 		applyProcessing()
 	}
 	
 	func removeFilter(action: UIAlertAction) {
 		guard currentImage != nil else { return }
-		
 		currentFilter = CIFilter(name: action.title!)
-		
 		if let image = currentImage {
 			self.currentImageView.image = image
 		}
