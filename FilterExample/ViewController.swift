@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
 	
@@ -15,6 +16,8 @@ class ViewController: UIViewController {
 	var currentImage: UIImage!
 	var currentFilter: CIFilter!
 	let context = CIContext(options: nil)
+	var arrayOfSounds = ["babyChick", "bee", "bikeHorn", "birdTweet", "cleaningGlass", "cowMoo", "cricket", "ducks", "dwarfGoat", "henLays", "kittenMew", "plasticWhistle", "squeakerToy"]
+	var audioPlayer: AVAudioPlayer?
 	
 	let currentImageView: UIImageView = {
 		let iv = UIImageView()
@@ -32,6 +35,15 @@ class ViewController: UIViewController {
 		return button
 	}()
 	
+	let soundButton: UIButton = {
+		let button = UIButton(type: .system)
+		button.setTitle("Play Sound", for: .normal)
+		button.titleLabel?.font = UIFont.systemFont(ofSize: 25)
+		button.tintColor = UIColor.white
+		button.addTarget(self, action: #selector(playSound), for: .touchUpInside)
+		return button
+	}()
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		currentImage = currentImageView.image
@@ -46,6 +58,28 @@ class ViewController: UIViewController {
 		filterButton.anchor(top: nil, left: nil, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 20
 			, paddingRight: 0, width: 0, height: 0)
 		filterButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+		
+		view.add(soundButton)
+		soundButton.anchor(top: self.view.safeAreaLayoutGuide.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+		soundButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+	}
+	
+	func setupAudioPlayer(_ file: String, type: String) {
+		let path = Bundle.main.path(forResource: file, ofType: type)
+		let url = URL.init(fileURLWithPath: path!)
+		do {
+			try audioPlayer = AVAudioPlayer(contentsOf: url)
+		} catch {
+			print("Player not available")
+		}
+	}
+	
+	@objc func playSound() {
+		let range: UInt32 = UInt32(arrayOfSounds.count)
+		let number = Int(arc4random_uniform(range))
+		
+		self.setupAudioPlayer(arrayOfSounds[number], type: "mp3")
+		self.audioPlayer?.play()
 	}
 	
 	@objc func changeFilter() {
